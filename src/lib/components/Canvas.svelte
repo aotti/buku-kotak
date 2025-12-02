@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 
+	const {row} = $props()
     let width = 100,
         height = 100,
         color = '#000',
@@ -58,31 +59,32 @@
 
 <svelte:window on:resize={handleSize} />
 
-<canvas class="border-2"
-    {width}
-    {height}
-    style:background
-    bind:this={canvas} 
-    onmousedown={handleStart}	
-    ontouchstart={e => {
-        const { clientX, clientY } = e.touches[0]
-        handleStart({
-            offsetX: clientX - l,
-            offsetY: clientY - t
-        })
-    }}	
-    onmouseup={handleEnd}				
-    ontouchend={handleEnd}				
-    onmouseleave={handleEnd}
-    onmousemove={handleMove}
-    ontouchmove={e => {
-        const { clientX, clientY } = e.touches[0]
-        handleMove({
-            offsetX: clientX - l,
-            offsetY: clientY - t
-        })
-    }}></canvas>
-    
-<button class="border" style:background onclick={ev => {
-    context.clearRect(0, 0, width, height)
-}}> clear </button>
+<div class="col-span-2 flex flex-col">
+	<canvas class="bg-darkbrown-4"
+		{width}
+		{height}
+		bind:this={canvas} 
+		onmousedown={handleStart}	
+		ontouchstart={e => {
+			const { clientX, clientY } = e.touches[0]
+			handleStart({
+				offsetX: clientX - l,
+				offsetY: clientY - t
+			})
+		}}	
+		onmouseup={handleEnd}				
+		ontouchend={handleEnd}				
+		onmouseleave={handleEnd}
+		onmousemove={handleMove}
+		ontouchmove={e => {
+			const { clientX, clientY } = e.touches[0]
+			handleMove({
+				offsetX: clientX - l,
+				offsetY: clientY - t
+			})
+		}}></canvas>
+		
+	<button class="bg-darkbrown-2" onclick={ev => {
+		context.clearRect(0, 0, width, height)
+	}}> {`clear - ${row}`} </button>
+</div>
