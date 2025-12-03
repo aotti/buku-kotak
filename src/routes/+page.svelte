@@ -20,7 +20,7 @@
 		<History />
 	{:else}
 		<!-- paper section -->
-		<div class="col-span-10 md:col-span-6 lg:col-span-6 grid grid-cols-12 gap-1">
+		<div id="paper" class="col-span-10 md:col-span-6 lg:col-span-6 grid grid-cols-12 gap-1">
 		{#each rows as row, r}
 			{#each cols as col, c}
 			<!-- 6 cols 5 rows -->

@@ -1,14 +1,22 @@
 <script lang="ts">
-    import { sharedStates } from "$lib/helper/misc-helper.svelte";
+    import { qS, sharedStates } from "$lib/helper/misc-helper.svelte";
+    import html2canvas from "html2canvas";
 
     const sidebarButtons = [
         {id: 'paper', text: 'paper'},
         {id: 'history', text: 'history'},
-        {id: 'save_upload', text: 'save & upload'},
     ]
 
     function categoryHandler(id: string) {
         sharedStates.currentPage = id
+    }
+
+    function screenshot() {
+        // set element to screenshot
+        html2canvas(qS('#paper'))
+        // generate element to canvas
+        // then convert to base64
+        .then(canvas => console.log(canvas.toDataURL()))
     }
 </script>
 
@@ -18,6 +26,7 @@
     {#each sidebarButtons as button}
     <a href={`?section=${button.id}`} class="border p-1" onclick={() => categoryHandler(button.id)}> {button.text} </a>
     {/each}
+    <a href={`?section=save_upload`} class="border p-1" onclick={() => screenshot()}> save & upload </a>
 </div>
 
 <!-- mobile ver -->
@@ -26,4 +35,5 @@
     {#each sidebarButtons as button}
     <a href={`?section=${button.id}`} class="border p-1" onclick={() => categoryHandler(button.id)}> {button.text} </a>
     {/each}
+    <a href={`?section=save_upload`} class="border p-1" onclick={() => screenshot()}> save & upload </a>
 </div>
