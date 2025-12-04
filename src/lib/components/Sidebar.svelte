@@ -1,38 +1,10 @@
 <script lang="ts">
-    import { PUBLIC_BUKU_KOTAK_API_URL } from "$env/static/public";
-    import { qS, sharedStates } from "$lib/helper/misc-helper.svelte";
-    import html2canvas from "html2canvas";
+    import { categoryHandler, filterHistory, screenshotThenUpload, sharedStates } from "$lib/helper/misc-helper.svelte";
 
     const sidebarButtons = [
         {id: 'paper', text: 'paper'},
         {id: 'history', text: 'history'},
     ]
-
-    function categoryHandler(id: string) {
-        sharedStates.currentPage = id
-    }
-
-    function screenshotThenUpload() {
-        const imageTitle = prompt('Please enter image title')
-        if(!imageTitle) return alert('image title cannot be empty')
-        // set element to screenshot
-        html2canvas(qS('#paper'))
-        // generate element to canvas
-        .then(async canvas => {
-            const imageData = {
-                public_id: imageTitle,
-                // then convert to base64
-                img_base64: canvas.toDataURL()
-            }
-            const fetchOptions: RequestInit = {
-                method: 'POST',
-                headers: {'content-type': 'application/json'},
-                body: JSON.stringify(imageData)
-            }
-            const imageUpload = await fetch(`${PUBLIC_BUKU_KOTAK_API_URL}/upload`, fetchOptions)
-            if(imageUpload.status < 400) return alert('image upload success!')
-        })
-    }
 </script>
 
 <!-- desktop ver -->
@@ -42,6 +14,9 @@
     <a href={`?section=${button.id}`} class="border p-1" onclick={() => categoryHandler(button.id)}> {button.text} </a>
     {/each}
     <a href={`?section=save_upload`} class="border p-1" onclick={() => screenshotThenUpload()}> save & upload </a>
+    {#if sharedStates.currentPage == 'history'}
+        <input type="text" class="bg-darkbrown-3/70 border p-1" placeholder="search history" oninput={filterHistory}>
+    {/if}
 </div>
 
 <!-- mobile ver -->
