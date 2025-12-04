@@ -26,4 +26,7 @@
     <a href={`?section=${button.id}`} class="border p-1" onclick={() => categoryHandler(button.id)}> {button.text} </a>
     {/each}
     <a href={`?section=save_upload`} class="border p-1" onclick={() => screenshotThenUpload()}> save & upload </a>
+    {#if sharedStates.currentPage == 'history'}
+        <input type="text" class="bg-darkbrown-3/70 border p-1" placeholder="search history" oninput={filterHistory}>
+    {/if}
 </div>
