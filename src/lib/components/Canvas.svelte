@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { disableScrolling, enableScrolling } from '$lib/helper/misc-helper.svelte';
 	import { onMount } from 'svelte'
 
 	const {row} = $props()
@@ -24,12 +25,16 @@
 		if(color === background) {
 			context.clearRect(0, 0, width, height)
 		} else {
+			disableScrolling()
 			isDrawing = true
 			start = { x, y }
 		}
 	}
 	
-	const handleEnd = () => { isDrawing = false }
+	const handleEnd = () => { 
+		enableScrolling()
+		isDrawing = false 
+	}
 	const handleMove = (({ offsetX: x1, offsetY: y1 }) => {
 		if(!isDrawing) return
 		

@@ -49,3 +49,13 @@ export function filterHistory(ev: Event & {currentTarget: HTMLInputElement}) {
     else if(inputValue.length === 0)
         sharedStates.historyFiltered = []
 }
+
+export function disableScrolling(){
+    let x = window.scrollX;
+    let y = window.scrollY;
+    window.onscroll=() => {window.scrollTo(x, y)};
+}
+
+export function enableScrolling(){
+    window.onscroll=() => {};
+}

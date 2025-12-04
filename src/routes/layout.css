@@ -6,3 +6,7 @@
     --color-darkbrown-3: #B85C38;
     --color-darkbrown-4: #E0C097;
 }
+
+html, body {
+    overscroll-behavior: none !important;
+}
