@@ -18,6 +18,7 @@
 	onMount(() => {
 		context = canvas.getContext('2d')
 		context.lineWidth = 3
+			handleSize()
 	})
 	
 	const handleStart = ({ offsetX: x, offsetY: y }) => { 
@@ -64,6 +65,8 @@
 		onmousedown={handleStart}	
 		ontouchstart={e => {
 			const { clientX, clientY } = e.touches[0]
+			// for mobile, handle size every touch start
+			// because the viewport position changed on scroll
 			handleSize()
 			handleStart({
 				offsetX: clientX - l,
