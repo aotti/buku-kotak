@@ -6,6 +6,7 @@ import (
 	"os"
 	"regexp"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,11 +21,16 @@ func main() {
 		os.Setenv("CLOUDINARY_API_SECRET", "")
 		os.Setenv("CLOUDINARY_URL", "")
 		os.Setenv("UPSTASH_REDIS_REST_TCP", "")
+		os.Setenv("BUKU_KOTAK_URL", "")
 	}
 
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	// routes
+	router.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"http://localhost:5173", os.Getenv("BUKU_KOTAK_URL")},
+		AllowMethods: []string{"GET", "POST"},
+	}))
 	router.GET("/api/history", api.PaperHistory)
 	router.POST("/api/upload", api.PaperUpload)
 
