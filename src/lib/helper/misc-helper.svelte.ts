@@ -54,7 +54,7 @@ export function disableScrolling(){
     let x = window.scrollX;
     let y = window.scrollY;
     window.onscroll=() => {window.scrollTo(x, y)};
-    window.ontouchmove = (ev: TouchEvent) => {ev.preventDefault()}
+    window.ontouchmove = (ev) => {ev.preventDefault(); ev.stopPropagation()}
 }
 
 export function enableScrolling(){
