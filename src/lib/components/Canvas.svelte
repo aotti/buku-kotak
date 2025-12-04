@@ -18,7 +18,6 @@
 	onMount(() => {
 		context = canvas.getContext('2d')
 		context.lineWidth = 3
-		handleSize()
 	})
 	
 	const handleStart = ({ offsetX: x, offsetY: y }) => { 
@@ -65,6 +64,7 @@
 		onmousedown={handleStart}	
 		ontouchstart={e => {
 			const { clientX, clientY } = e.touches[0]
+			handleSize()
 			handleStart({
 				offsetX: clientX - l,
 				offsetY: clientY - t
