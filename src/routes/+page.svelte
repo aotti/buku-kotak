@@ -5,7 +5,6 @@
     import Sidebar from "$lib/components/Sidebar.svelte";
     import { sharedStates } from "$lib/helper/misc-helper.svelte";
 
-	let currentPage = $state('paper')
 	const [cols, rows] = [Array(6), Array(5)]
     // get page section from search param
     const getSection = $page.url.searchParams.get('section')

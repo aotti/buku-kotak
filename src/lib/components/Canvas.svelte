@@ -17,15 +17,8 @@
 	onMount(() => {
 		context = canvas.getContext('2d')
 		context.lineWidth = 3
-		
 		handleSize()
 	})
-	
-	$effect(() => {
-        if(context) {
-			context.strokeStyle = color
-	    }
-    })
 	
 	const handleStart = ({ offsetX: x, offsetY: y }) => { 
 		if(color === background) {
