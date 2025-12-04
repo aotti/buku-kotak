@@ -30,6 +30,7 @@ func main() {
 	router.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"http://localhost:5173", os.Getenv("BUKU_KOTAK_URL")},
 		AllowMethods: []string{"GET", "POST"},
+		AllowHeaders: []string{"Content-Type"},
 	}))
 	router.GET("/api/history", api.PaperHistory)
 	router.POST("/api/upload", api.PaperUpload)
