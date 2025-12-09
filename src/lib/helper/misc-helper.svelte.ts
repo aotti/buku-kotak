@@ -50,13 +50,16 @@ export function filterHistory(ev: Event & {currentTarget: HTMLInputElement}) {
         sharedStates.historyFiltered = []
 }
 
+function preventDefault(e) {e.preventDefault()}
+
 export function disableScrolling(){
     let x = window.scrollX;
     let y = window.scrollY;
     window.onscroll=() => {window.scrollTo(x, y)};
-    window.addEventListener('touchmove', e => e.preventDefault(), {passive: false})
+    window.addEventListener('touchmove', preventDefault, {passive: false})
 }
 
 export function enableScrolling(){
     window.onscroll=() => {};
+    window.removeEventListener('touchmove', preventDefault)
 }
