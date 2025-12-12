@@ -32,13 +32,38 @@ export function screenshotThenUpload() {
             // then convert to base64
             img_base64: canvas.toDataURL()
         }
+        // set upload notif
+        const imageUploadNotifContainer = qS('#upload_notif_container')
+        const imageUploadNotif = qS('#upload_notif')
+        imageUploadNotifContainer.classList.remove('hidden')
+        imageUploadNotif.textContent = 'uploading image..'
+        
+        // uploading image
         const fetchOptions: RequestInit = {
             method: 'POST',
             headers: {'content-type': 'application/json'},
             body: JSON.stringify(imageData)
         }
         const imageUpload = await fetch(`${PUBLIC_BUKU_KOTAK_API_URL}/upload`, fetchOptions)
-        if(imageUpload.status < 400) return alert('image upload success!')
+        // upload image response
+        if(imageUpload.status < 400) {
+            screenshotThenUploadNotif('image upload success!')
+            .then(() => alert('image upload success!'))
+        }
+        else {
+            screenshotThenUploadNotif('fail to upload image..')
+            .then(async () => alert(await imageUpload.json()))
+        }
+    })
+}
+
+function screenshotThenUploadNotif(message: string) {
+    return new Promise(resolve => {
+        const imageUploadNotifContainer = qS('#upload_notif_container')
+        const imageUploadNotif = qS('#upload_notif')
+        // display and set notif text
+        imageUploadNotif.textContent = message
+        setTimeout(() => resolve(imageUploadNotifContainer.classList.add('hidden')), 3000)
     })
 }
 

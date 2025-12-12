@@ -2,6 +2,7 @@
     import { page } from "$app/stores";
     import Canvas from "$lib/components/Canvas.svelte";
     import History from "$lib/components/History.svelte";
+    import Notif from "$lib/components/Notif.svelte";
     import Sidebar from "$lib/components/Sidebar.svelte";
     import { sharedStates } from "$lib/helper/misc-helper.svelte";
 
@@ -13,6 +14,7 @@
 
 <main class="grid grid-cols-12 gap-2 p-1 bg-darkbrown-3 text-white">
 	<Sidebar />
+	<Notif />
 
 	{#if sharedStates.currentPage == 'history'}
 		<!-- history section -->
