@@ -53,8 +53,6 @@ export function screenshotThenUpload() {
             // then convert to base64
             img_base64: canvas.toDataURL()
         }
-        console.log(imageData);
-        return
         
         // set upload notif
         const imageUploadNotifContainer = qS('#upload_notif_container')
