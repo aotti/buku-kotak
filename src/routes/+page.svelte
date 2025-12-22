@@ -25,7 +25,7 @@
 		{#each rows as row, r}
 			{#each cols as col, c}
 			<!-- 6 cols 5 rows -->
-			<Canvas row={r+1} />
+			<Canvas row={r+1} col={c+1} />
 			{/each}
 		{/each}
 		</div>

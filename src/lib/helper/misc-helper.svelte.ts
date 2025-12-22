@@ -5,11 +5,13 @@ interface ISharedStates {
     currentPage: string,
     historyList: string[],
     historyFiltered: string[],
+    canvasCopy: HTMLCanvasElement,
 }
 export const sharedStates = $state<ISharedStates>({
     currentPage: 'paper',
     historyList: [],
     historyFiltered: [],
+    canvasCopy: null,
 })
 
 export function qS<T = HTMLElement & HTMLInputElement>(selector: string) {
@@ -18,6 +20,25 @@ export function qS<T = HTMLElement & HTMLInputElement>(selector: string) {
 
 export function categoryHandler(id: string) {
     sharedStates.currentPage = id
+}
+
+export function canvasCopy(element_id: string) {
+    const canvasCopyElement = qS(element_id) as HTMLCanvasElement
+    canvasCopyElement.classList.toggle('bg-green-400/50')
+    setTimeout(() => canvasCopyElement.classList.toggle('bg-green-400/50'), 5000);
+    // set canvas copy
+    sharedStates.canvasCopy = canvasCopyElement
+}
+
+export function canvasPaste(element_id: string) {
+    const canvasPasteElement = qS(element_id) as HTMLCanvasElement
+    canvasPasteElement.classList.toggle('bg-green-400/50')
+    setTimeout(() => canvasPasteElement.classList.toggle('bg-green-400/50'), 1000);
+    // paste canvas
+    const canvasPasteCtx = canvasPasteElement.getContext('2d')
+    canvasPasteCtx.drawImage(sharedStates.canvasCopy, 0, 0)
+    // reset canvas copy
+    sharedStates.canvasCopy = null
 }
 
 export function screenshotThenUpload() {
@@ -32,6 +53,9 @@ export function screenshotThenUpload() {
             // then convert to base64
             img_base64: canvas.toDataURL()
         }
+        console.log(imageData);
+        return
+        
         // set upload notif
         const imageUploadNotifContainer = qS('#upload_notif_container')
         const imageUploadNotif = qS('#upload_notif')

@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { disableScrolling, enableScrolling } from '$lib/helper/misc-helper.svelte';
+    import { canvasCopy, canvasPaste, disableScrolling, enableScrolling, qS, sharedStates } from '$lib/helper/misc-helper.svelte';
 	import { onMount } from 'svelte'
 
-	const {row} = $props()
+	const {row, col} = $props()
     let width = 100,
         height = 100,
         color = '#000',
@@ -18,7 +18,7 @@
 	onMount(() => {
 		context = canvas.getContext('2d')
 		context.lineWidth = 3
-			handleSize()
+		handleSize()
 	})
 	
 	const handleStart = ({ offsetX: x, offsetY: y }) => { 
@@ -58,7 +58,8 @@
 <svelte:window on:resize={handleSize} />
 
 <div class="col-span-2 flex flex-col">
-	<canvas class="bg-darkbrown-4"
+	<input type="text" class="border bg-darkbrown-1 text-center h-8" placeholder="~">
+	<canvas id={`canvas_${row}${col}`} class="bg-darkbrown-4"
 		{width}
 		{height}
 		bind:this={canvas} 
@@ -84,8 +85,21 @@
 				offsetY: clientY - t
 			})
 		}}></canvas>
-		
-	<button class="bg-darkbrown-2" onclick={ev => {
-		context.clearRect(0, 0, width, height)
-	}}> {`clear - ${row}`} </button>
+	<!-- canvas action -->
+	<div class="flex">
+		<!-- clear button -->
+		<button class="grow bg-darkbrown-2 border" onclick={ev => context.clearRect(0, 0, width, height)}> 
+			{`cls - ${row}`}
+		</button>
+		<!-- copy & paste button -->
+		{#if sharedStates.canvasCopy != null}
+			<button class="grow bg-darkbrown-2 border" onclick={() => canvasPaste(`#canvas_${row}${col}`)}>
+				{`pste - ${col}`}
+			</button>
+		{:else}
+			<button class="grow bg-darkbrown-2 border" onclick={() => canvasCopy(`#canvas_${row}${col}`)}>
+				{`cpy - ${col}`}
+			</button>
+		{/if}
+	</div>
 </div>
