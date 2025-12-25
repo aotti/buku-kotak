@@ -18,6 +18,10 @@ export function qS<T = HTMLElement & HTMLInputElement>(selector: string) {
     return document.querySelector(selector) as T
 }
 
+export function qSA<T = NodeListOf<HTMLElement & HTMLInputElement>>(selector: string) {
+    return document.querySelectorAll(selector) as T
+}
+
 export function categoryHandler(id: string) {
     sharedStates.currentPage = id
 }
@@ -42,6 +46,11 @@ export function canvasPaste(element_id: string) {
 }
 
 export function screenshotThenUpload() {
+    // hide action buttons before screenshot
+    const actionButtons = qSA('.action-buttons')
+    actionButtons.forEach(el => el.classList.add('hidden'))
+    
+    // set image title
     const imageTitle = prompt('Please enter image title')
     if(!imageTitle) return alert('image title cannot be empty')
     // set element to screenshot
@@ -67,6 +76,8 @@ export function screenshotThenUpload() {
             body: JSON.stringify(imageData)
         }
         const imageUpload = await fetch(`${PUBLIC_BUKU_KOTAK_API_URL}/upload`, fetchOptions)
+        // show action buttons
+        actionButtons.forEach(el => el.classList.remove('hidden'))
         // upload image response
         if(imageUpload.status < 400) {
             screenshotThenUploadNotif('image upload success!')

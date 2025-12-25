@@ -86,7 +86,7 @@
 			})
 		}}></canvas>
 	<!-- canvas action -->
-	<div class="flex">
+	<div class="action-buttons flex">
 		<!-- clear button -->
 		<button class="grow bg-darkbrown-2 border" onclick={ev => context.clearRect(0, 0, width, height)}> 
 			{`cls - ${row}`}
