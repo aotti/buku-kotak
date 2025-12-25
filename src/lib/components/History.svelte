@@ -20,7 +20,7 @@
         {@const imageUrl = history}
         {@const imageTitle = history.match(/(?<=buku-kotak\/).*(?=.png)/)[0]}
         <p class="flex flex-col items-center cursor-pointer">
-            <img src={imageUrl} alt={imageTitle} width="400" height="400">
+            <img src={imageUrl} alt={imageTitle} width="480" height="480">
             <span> {imageTitle.replaceAll('%20', ' ')} </span>
         </p>
         {/each}
@@ -30,7 +30,7 @@
         {@const imageUrl = history}
         {@const imageTitle = history.match(/(?<=buku-kotak\/).*(?=.png)/)[0]}
         <p class="flex flex-col items-center cursor-pointer">
-            <img src={imageUrl} alt={imageTitle} width="400" height="400">
+            <img src={imageUrl} alt={imageTitle} width="480" height="480">
             <span> {imageTitle.replaceAll('%20', ' ')} </span>
         </p>
         {/each}
