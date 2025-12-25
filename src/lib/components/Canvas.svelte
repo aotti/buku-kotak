@@ -53,12 +53,17 @@
 		t = top
 		l = left
 	}
+
+	const handleInputFurigana = (ev: Event & {currentTarget: EventTarget & HTMLInputElement}) => {
+		const uppercaseValue = ev.currentTarget.value.toUpperCase()
+		ev.currentTarget.value = uppercaseValue
+	}
 </script>
 
 <svelte:window on:resize={handleSize} />
 
 <div class="col-span-2 flex flex-col">
-	<input type="text" class="border bg-darkbrown-1 text-center h-8" placeholder="~">
+	<input type="text" class="border bg-darkbrown-1 text-center h-8" placeholder="~" oninput={handleInputFurigana}>
 	<canvas id={`canvas_${row}${col}`} class="bg-darkbrown-4"
 		{width}
 		{height}
