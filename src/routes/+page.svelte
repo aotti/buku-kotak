@@ -6,7 +6,7 @@
     import Sidebar from "$lib/components/Sidebar.svelte";
     import { sharedStates } from "$lib/helper/misc-helper.svelte";
 
-	const [cols, rows] = [Array(6), Array(5)]
+	const [cols, rows] = [Array(6), Array(6)]
     // get page section from search param
     const getSection = $page.url.searchParams.get('section')
     if(getSection) sharedStates.currentPage = getSection
@@ -24,7 +24,7 @@
 		<div id="paper" class="col-span-10 md:col-span-6 lg:col-span-6 grid grid-cols-12 gap-1">
 		{#each rows as row, r}
 			{#each cols as col, c}
-			<!-- 6 cols 5 rows -->
+			<!-- 6 cols 6 rows -->
 			<Canvas row={r+1} col={c+1} />
 			{/each}
 		{/each}
