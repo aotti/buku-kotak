@@ -60,7 +60,8 @@ export function screenshotThenUpload() {
         const imageData = {
             public_id: imageTitle,
             // then convert to base64
-            img_base64: canvas.toDataURL()
+            img_base64: canvas.toDataURL(),
+            img_width: canvas.width,
         }
         
         // set upload notif
