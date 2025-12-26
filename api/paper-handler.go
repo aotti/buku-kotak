@@ -24,8 +24,9 @@ type EnvData struct {
 }
 
 type JsonData struct {
-	Img_base64 string `json:"img_base64"`
 	Public_id  string `json:"public_id"`
+	Img_base64 string `json:"img_base64"`
+	Img_width  int    `json:"img_width"`
 }
 
 func envData() *EnvData {
@@ -49,23 +50,6 @@ func recoverResponse(c *gin.Context) {
 	}
 }
 
-func PaperHistory(c *gin.Context) {
-	defer recoverResponse(c)
-	envData := envData()
-
-	// initialize redis
-	rdbOpt, _ := redis.ParseURL(envData.UPSTASH_REDIS_REST_TCP)
-	rdb := redis.NewClient(rdbOpt)
-	getHistory, getHistoryErr := rdb.Get(c, "buku_kotak_history").Result()
-	if getHistoryErr == redis.Nil || getHistoryErr != nil {
-		// key not exist, return empty array
-		c.JSON(http.StatusOK, helper.HandlerResponse(200, []any{}, nil))
-	} else {
-		// Return JSON response
-		c.JSON(http.StatusOK, helper.HandlerResponse(200, strings.Split(getHistory, ";"), nil))
-	}
-}
-
 func PaperUpload(c *gin.Context) {
 	defer recoverResponse(c)
 
@@ -78,15 +62,36 @@ func PaperUpload(c *gin.Context) {
 
 	// set cloudinary
 	cld, _ := cloudinary.NewFromParams(envData.CLOUDINARY_API_NAME, envData.CLOUDINARY_API_KEY, envData.CLOUDINARY_API_SECRET)
-	// upload image
-	uploadRes, uploadErr := cld.Upload.Upload(c,
-		jsonData.Img_base64,
-		uploader.UploadParams{
-			PublicID:       jsonData.Public_id,
-			Folder:         "buku-kotak",
-			UploadPreset:   "ml_default",
-			AllowedFormats: []string{"jpg", "jpeg", "png"},
-		})
+
+	var (
+		uploadRes *uploader.UploadResult
+		uploadErr error
+	)
+	// check image width
+	if jsonData.Img_width > 1000 {
+		fmt.Println("uploading image with tranform")
+		// upload image with transformation
+		uploadRes, uploadErr = cld.Upload.Upload(c,
+			jsonData.Img_base64,
+			uploader.UploadParams{
+				PublicID:       jsonData.Public_id,
+				Folder:         "buku-kotak",
+				UploadPreset:   "ml_default",
+				AllowedFormats: []string{"jpg", "jpeg", "png"},
+				Transformation: "w_1000",
+			})
+	} else {
+		fmt.Println("uploading image no tranform")
+		// upload image
+		uploadRes, uploadErr = cld.Upload.Upload(c,
+			jsonData.Img_base64,
+			uploader.UploadParams{
+				PublicID:       jsonData.Public_id,
+				Folder:         "buku-kotak",
+				UploadPreset:   "ml_default",
+				AllowedFormats: []string{"jpg", "jpeg", "png"},
+			})
+	}
 	// check upload error
 	if uploadErr != nil {
 		panic("cloudinary, " + uploadErr.Error())
@@ -113,4 +118,21 @@ func PaperUpload(c *gin.Context) {
 
 	// Return JSON response
 	c.JSON(http.StatusOK, helper.HandlerResponse(200, []any{uploadRes.PublicID}, nil))
+}
+
+func PaperHistory(c *gin.Context) {
+	defer recoverResponse(c)
+	envData := envData()
+
+	// initialize redis
+	rdbOpt, _ := redis.ParseURL(envData.UPSTASH_REDIS_REST_TCP)
+	rdb := redis.NewClient(rdbOpt)
+	getHistory, getHistoryErr := rdb.Get(c, "buku_kotak_history").Result()
+	if getHistoryErr == redis.Nil || getHistoryErr != nil {
+		// key not exist, return empty array
+		c.JSON(http.StatusOK, helper.HandlerResponse(200, []any{}, nil))
+	} else {
+		// Return JSON response
+		c.JSON(http.StatusOK, helper.HandlerResponse(200, strings.Split(getHistory, ";"), nil))
+	}
 }
