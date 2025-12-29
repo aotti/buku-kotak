@@ -33,6 +33,7 @@ func main() {
 		AllowHeaders: []string{"Content-Type"},
 	}))
 	router.GET("/api/history", api.PaperHistory)
+	router.PUT("/api/history", api.PaperDeleteHistory)
 	router.POST("/api/upload", api.PaperUpload)
 
 	if err := router.Run(); err != nil {

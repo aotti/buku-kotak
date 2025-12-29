@@ -23,10 +23,14 @@ type EnvData struct {
 	UPSTASH_REDIS_REST_TCP string
 }
 
-type JsonData struct {
+type UploadJson struct {
 	Public_id  string `json:"public_id"`
 	Img_base64 string `json:"img_base64"`
 	Img_width  int    `json:"img_width"`
+}
+
+type HistoryDeleteJson struct {
+	Pattern string `json:"pattern"`
 }
 
 func envData() *EnvData {
@@ -54,7 +58,7 @@ func PaperUpload(c *gin.Context) {
 	defer recoverResponse(c)
 
 	envData := envData()
-	var jsonData JsonData
+	var jsonData UploadJson
 	// return if body empty
 	if jsonErr := c.BindJSON(&jsonData); jsonErr != nil {
 		panic("body cannot be empty")
@@ -134,5 +138,44 @@ func PaperHistory(c *gin.Context) {
 	} else {
 		// Return JSON response
 		c.JSON(http.StatusOK, helper.HandlerResponse(200, strings.Split(getHistory, ";"), nil))
+	}
+}
+
+func PaperDeleteHistory(c *gin.Context) {
+	defer recoverResponse(c)
+	envData := envData()
+
+	var jsonData HistoryDeleteJson
+	// return if body empty
+	if jsonErr := c.BindJSON(&jsonData); jsonErr != nil {
+		panic("body cannot be empty")
+	}
+	// replace "space" with "%20"
+	jsonData.Pattern = strings.ReplaceAll(jsonData.Pattern, " ", "%20")
+
+	// initialize redis
+	rdbOpt, _ := redis.ParseURL(envData.UPSTASH_REDIS_REST_TCP)
+	rdb := redis.NewClient(rdbOpt)
+	getHistory, getHistoryErr := rdb.Get(c, "buku_kotak_history").Result()
+	// fail to get history
+	if getHistoryErr == redis.Nil || getHistoryErr != nil {
+		// key not exist, return empty array
+		c.JSON(http.StatusOK, helper.HandlerResponse(200, []any{}, nil))
+	} else {
+		historyArray := strings.Split(getHistory, ";")
+		newHistoryArray := []string{}
+		// remove a history
+		for _, val := range historyArray {
+			match, _ := regexp.MatchString(jsonData.Pattern, val)
+			// push history to new array except deleted one
+			if !match {
+				newHistoryArray = append(newHistoryArray, val)
+			}
+		}
+		// re-set redis history
+		rdb.Set(c, "buku_kotak_history", strings.Join(newHistoryArray, ";"), 0)
+		// return response
+		successData := fmt.Sprintf("history with pattern '%s' has been deleted", jsonData.Pattern)
+		c.JSON(http.StatusOK, helper.HandlerResponse(200, successData, nil))
 	}
 }
