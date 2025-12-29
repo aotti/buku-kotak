@@ -1,16 +1,24 @@
-import { PUBLIC_BUKU_KOTAK_API_URL } from "$env/static/public"
+import { PUBLIC_BUKU_KOTAK_API_DEMO, PUBLIC_BUKU_KOTAK_API_URL } from "$env/static/public"
 import html2canvas from "html2canvas"
 
 interface ISharedStates {
     currentPage: string,
-    historyList: string[],
-    historyFiltered: string[],
+    historyListRow1: string[],
+    historyListRow2: string[],
+    historyListRow3: string[],
+    historyFilteredRow1: string[],
+    historyFilteredRow2: string[],
+    historyFilteredRow3: string[],
     canvasCopy: HTMLCanvasElement,
 }
 export const sharedStates = $state<ISharedStates>({
     currentPage: 'paper',
-    historyList: [],
-    historyFiltered: [],
+    historyListRow1: [],
+    historyListRow2: [],
+    historyListRow3: [],
+    historyFilteredRow1: [],
+    historyFilteredRow2: [],
+    historyFilteredRow3: [],
     canvasCopy: null,
 })
 
@@ -102,11 +110,17 @@ function screenshotThenUploadNotif(message: string) {
 }
 
 export function filterHistory(ev: Event & {currentTarget: HTMLInputElement}) {
-    const inputValue = ev.currentTarget.value
-    if(inputValue.length > 0) 
-        sharedStates.historyFiltered = sharedStates.historyList.filter(v => v.match(inputValue))
-    else if(inputValue.length === 0)
-        sharedStates.historyFiltered = []
+    const inputValue = ev.currentTarget.value.replaceAll(' ', '%20')
+    if(inputValue.length > 0) {
+        sharedStates.historyFilteredRow1 = sharedStates.historyListRow1.filter(v => v.match(inputValue))
+        sharedStates.historyFilteredRow2 = sharedStates.historyListRow2.filter(v => v.match(inputValue))
+        sharedStates.historyFilteredRow3 = sharedStates.historyListRow3.filter(v => v.match(inputValue))
+    }
+    else if(inputValue.length === 0) {
+        sharedStates.historyFilteredRow1 = []
+        sharedStates.historyFilteredRow2 = []
+        sharedStates.historyFilteredRow3 = []
+    }
 }
 
 function preventDefault(e) {e.preventDefault()}
