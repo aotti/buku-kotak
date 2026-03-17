@@ -60,7 +60,7 @@
 	}
 </script>
 
-<svelte:window on:resize={handleSize} />
+<svelte:window on:click={handleSize} />
 
 <div class="col-span-2 flex flex-col">
 	<input type="text" class="border bg-darkbrown-1 text-center h-8" placeholder="~" oninput={handleInputFurigana}>
