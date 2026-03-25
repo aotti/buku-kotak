@@ -29,15 +29,16 @@ func init() {
 
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
+	api := app.Group("/api")
 	// routes
 	router.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"http://localhost:5173", os.Getenv("BUKU_KOTAK_URL")},
 		AllowMethods: []string{"GET", "POST"},
 		AllowHeaders: []string{"Content-Type"},
 	}))
-	router.GET("/api/history", handlers.PaperHistory)
-	router.PUT("/api/history", handlers.PaperDeleteHistory)
-	router.POST("/api/upload", handlers.PaperUpload)
+	api.GET("/history", handlers.PaperHistory)
+	api.PUT("/history", handlers.PaperDeleteHistory)
+	api.POST("/upload", handlers.PaperUpload)
 
 	if err := router.Run(); err != nil {
 		log.Fatalf("failed to run server: %v", err)
