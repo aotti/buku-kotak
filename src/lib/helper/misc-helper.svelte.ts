@@ -3,22 +3,22 @@ import html2canvas from "html2canvas"
 
 interface ISharedStates {
     currentPage: string,
-    historyListRow1: string[],
-    historyListRow2: string[],
-    historyListRow3: string[],
-    historyFilteredRow1: string[],
-    historyFilteredRow2: string[],
-    historyFilteredRow3: string[],
+    historyList: {
+        filename: string,
+        link: string,
+    }[],
+    historyFiltered: {
+        filename: string,
+        link: string,
+    }[],
+    historyPage: [number, number],
     canvasCopy: HTMLCanvasElement,
 }
 export const sharedStates = $state<ISharedStates>({
     currentPage: 'paper',
-    historyListRow1: [],
-    historyListRow2: [],
-    historyListRow3: [],
-    historyFilteredRow1: [],
-    historyFilteredRow2: [],
-    historyFilteredRow3: [],
+    historyList: [],
+    historyFiltered: [],
+    historyPage: [0, 8],
     canvasCopy: null,
 })
 
@@ -110,16 +110,12 @@ function screenshotThenUploadNotif(message: string) {
 }
 
 export function filterHistory(ev: Event & {currentTarget: HTMLInputElement}) {
-    const inputValue = ev.currentTarget.value.replaceAll(' ', '%20')
+    const inputValue = ev.currentTarget.value
     if(inputValue.length > 0) {
-        sharedStates.historyFilteredRow1 = sharedStates.historyListRow1.filter(v => v.match(inputValue))
-        sharedStates.historyFilteredRow2 = sharedStates.historyListRow2.filter(v => v.match(inputValue))
-        sharedStates.historyFilteredRow3 = sharedStates.historyListRow3.filter(v => v.match(inputValue))
+        sharedStates.historyFiltered = sharedStates.historyList.filter(v => v.filename.match(inputValue))
     }
     else if(inputValue.length === 0) {
-        sharedStates.historyFilteredRow1 = []
-        sharedStates.historyFilteredRow2 = []
-        sharedStates.historyFilteredRow3 = []
+        sharedStates.historyFiltered = []
     }
 }
 
