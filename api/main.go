@@ -2,7 +2,6 @@ package handler
 
 import (
 	"buku-kotak-api/handlers"
-	"log"
 	"net/http"
 	"os"
 	"regexp"
@@ -38,10 +37,6 @@ func init() {
 	api.GET("/history", handlers.PaperHistory)
 	api.PUT("/history", handlers.PaperDeleteHistory)
 	api.POST("/upload", handlers.PaperUpload)
-
-	if err := app.Run(); err != nil {
-		log.Fatalf("failed to run server: %v", err)
-	}
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
