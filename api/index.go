@@ -1,8 +1,9 @@
-package main
+package handler
 
 import (
-	"buku-kotak-api/api"
+	"buku-kotak-api/handlers"
 	"log"
+	"net/http"
 	"os"
 	"regexp"
 
@@ -10,7 +11,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func main() {
+var app *gin.Engine
+
+func init() {
 	host, _ := os.Hostname()
 	// set env for local
 	// The `(?i)` flag enables case-insensitive matching
@@ -32,11 +35,15 @@ func main() {
 		AllowMethods: []string{"GET", "POST"},
 		AllowHeaders: []string{"Content-Type"},
 	}))
-	router.GET("/api/history", api.PaperHistory)
-	router.PUT("/api/history", api.PaperDeleteHistory)
-	router.POST("/api/upload", api.PaperUpload)
+	router.GET("/api/history", handlers.PaperHistory)
+	router.PUT("/api/history", handlers.PaperDeleteHistory)
+	router.POST("/api/upload", handlers.PaperUpload)
 
 	if err := router.Run(); err != nil {
 		log.Fatalf("failed to run server: %v", err)
 	}
+}
+
+func Handler(w http.ResponseWriter, r *http.Request) {
+	app.ServeHTTP(w, r)
 }

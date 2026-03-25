@@ -1,4 +1,4 @@
-package api
+package handlers
 
 import (
 	"buku-kotak-api/helper"
