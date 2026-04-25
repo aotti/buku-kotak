@@ -1,4 +1,4 @@
-import { PUBLIC_BUKU_KOTAK_API_DEMO, PUBLIC_BUKU_KOTAK_API_URL } from "$env/static/public"
+import { PUBLIC_BUKU_KOTAK_API_URL } from "$env/static/public"
 import html2canvas from "html2canvas"
 
 interface ISharedStates {
@@ -84,7 +84,7 @@ export function screenshotThenUpload() {
             headers: {'content-type': 'application/json'},
             body: JSON.stringify(imageData)
         }
-        const imageUpload = await fetch(`${PUBLIC_BUKU_KOTAK_API_URL}/upload`, fetchOptions)
+        const imageUpload = await fetch(`${PUBLIC_BUKU_KOTAK_API_URL}`, fetchOptions)
         // show action buttons
         actionButtons.forEach(el => el.classList.remove('hidden'))
         // upload image response

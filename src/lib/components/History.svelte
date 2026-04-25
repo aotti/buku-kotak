@@ -1,10 +1,14 @@
 <script lang="ts">
-    import { PUBLIC_BUKU_KOTAK_API_DEMO, PUBLIC_BUKU_KOTAK_API_URL } from "$env/static/public";
+    import { PUBLIC_BUKU_KOTAK_API_URL } from "$env/static/public";
     import { qS, sharedStates } from "$lib/helper/misc-helper.svelte";
     
     $effect(() => {
         if(sharedStates.currentPage == 'history') {
-            fetch(`${PUBLIC_BUKU_KOTAK_API_URL}/history`, {method: 'GET', cache: 'no-store'})
+            const fetchOptions: RequestInit = {
+                method: 'GET', 
+                cache: 'no-store'
+            }
+            fetch(`${PUBLIC_BUKU_KOTAK_API_URL}`, fetchOptions)
             .then(data => data.json())
             .then(response => {
                 const tempHistoryList = response.data as string[]
